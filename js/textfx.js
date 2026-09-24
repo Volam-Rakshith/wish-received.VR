@@ -49,12 +49,27 @@
       Array.prototype.slice.call(node.childNodes).forEach(function (child) {
         if (child.nodeType === 3) {
           var frag = document.createDocumentFragment();
+          var word = null;
+          var lastWasSpace = !child.previousSibling; /* collapse repeats; keep a space that sits between two elements */
           graphemes(child.textContent).forEach(function (g) {
+            if (/^[ \t\r\n]+$/.test(g)) {
+              /* real, breakable space between words (NBSP is not matched → stays glued) */
+              word = null;
+              if (!lastWasSpace) { frag.appendChild(document.createTextNode(' ')); i++; }
+              lastWasSpace = true;
+              return;
+            }
+            lastWasSpace = false;
+            if (!word) {
+              word = document.createElement('span');
+              word.className = 'w';
+              frag.appendChild(word);
+            }
             var s = document.createElement('span');
             s.className = 'ch';
             s.style.setProperty('--ci', i++);
             s.textContent = g;
-            frag.appendChild(s);
+            word.appendChild(s);
           });
           node.replaceChild(frag, child);
         } else if (child.nodeType === 1 && !child.classList.contains('ch')) {

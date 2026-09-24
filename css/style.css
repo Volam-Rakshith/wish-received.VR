@@ -149,7 +149,7 @@ img, svg { display: block; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: calc(14px + env(safe-area-inset-top, 0px)) clamp(14px, 3vw, 24px) 0;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) max(clamp(14px, 3vw, 24px), env(safe-area-inset-right, 0px)) 0 max(clamp(14px, 3vw, 24px), env(safe-area-inset-left, 0px));
   pointer-events: none;
 }
 .chrome > * { pointer-events: auto; }
@@ -207,7 +207,7 @@ img, svg { display: block; }
   position: absolute;
   inset: 0;
   display: grid;
-  padding: calc(78px + env(safe-area-inset-top, 0px)) clamp(16px, 4vw, 34px) calc(88px + env(safe-area-inset-bottom, 0px));
+  padding: calc(78px + env(safe-area-inset-top, 0px)) max(clamp(16px, 4vw, 34px), env(safe-area-inset-right, 0px)) calc(88px + env(safe-area-inset-bottom, 0px)) max(clamp(16px, 4vw, 34px), env(safe-area-inset-left, 0px));
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
@@ -429,7 +429,6 @@ img, svg { display: block; }
   place-items: center;
 }
 .js #boot { display: grid; }
-#boot > div, #boot > p { grid-area: 1 / 1; }
 #boot {
   grid-template-rows: repeat(4, auto);
   align-content: center;
@@ -679,6 +678,9 @@ img, svg { display: block; }
   font-size: clamp(1.02rem, 3.9vw, 1.28rem);
   color: var(--soft);
 }
+.br-wide { display: none; }
+@media (min-width: 640px) { .br-wide { display: inline; } }
+.msg-sub { text-wrap: balance; }
 .cake { display: inline-block; animation: cakeFloat 3.2s ease-in-out 1s infinite; }
 @keyframes cakeFloat {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
@@ -992,11 +994,13 @@ body[data-scene="final"]   .tint-violet { opacity: 0.55; }
 @keyframes rip { to { transform: scale(3.2); opacity: 0; } }
 
 /* ----- letter-by-letter staggered reveals ----- */
+.letters .w { display: inline-block; max-width: 100%; }   /* a word only wraps by letter if it is wider than the screen */
 .letters .ch {
   display: inline-block;
   white-space: pre;
   will-change: transform, opacity;
 }
+.nb { display: inline-block; max-width: 100%; }              /* keeps "Name," glued together */
 .js .letters .ch {
   opacity: 0;
   transform: translateY(0.55em) scale(0.82) rotateX(38deg);
@@ -1147,7 +1151,7 @@ html.js body.booting .letters .ch {
   border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
   box-shadow: 0 0 18px 7px rgba(255, 190, 100, 0.38), 0 0 44px 16px rgba(255, 150, 60, 0.14);
   transform-origin: 50% 90%;
-  animation: flick 0.24s ease-in-out infinite alternate;
+  animation: flameFlick 0.24s ease-in-out infinite alternate;
 }
 .flame-halo {
   left: 50%;
@@ -1159,7 +1163,7 @@ html.js body.booting .letters .ch {
   background: radial-gradient(circle, rgba(255, 200, 110, 0.32), transparent 66%);
   animation: halo 1.6s ease-in-out infinite;
 }
-@keyframes flick {
+@keyframes flameFlick {
   from { transform: scale(1) rotate(-2.4deg); }
   to   { transform: scale(1.08, 0.94) rotate(2.6deg); }
 }
